@@ -148,9 +148,19 @@ tbody tr:hover{background:#eeeeff;}
     </div>
   </div>
   <div style="display:flex;flex-direction:column;gap:16px;position:sticky;top:120px;">
+    <div style="background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:16px;padding:16px 20px;box-shadow:0 4px 20px rgba(242,110,255,0.4);display:flex;align-items:center;justify-content:space-between;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="3" y="11" width="18" height="11" rx="3" fill="white"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4" stroke="white" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+          <circle cx="12" cy="16.5" r="2" fill="var(--accent2)"/>
+        </svg>
+        <span style="color:#fff;font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;">Totale</span>
+      </div>
+      <div id="total-badge" style="color:#fff;font-size:28px;font-weight:900;letter-spacing:1px;">—</div>
+    </div>
     <div class="right-card">
       <div class="right-card-title">
-        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImJnIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3R5bGU9InN0b3AtY29sb3I6I2YyNmVmZiIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiNkNDAwZTgiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgogIDxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiByeD0iOTYiIGZpbGw9InVybCgjYmcpIi8+CiAgPHJlY3QgeD0iMTI4IiB5PSIyNDgiIHdpZHRoPSIyNTYiIGhlaWdodD0iMTg0IiByeD0iMjgiIGZpbGw9IndoaXRlIi8+CiAgPHBhdGggZD0iTTE2OCAyNDggVjE4MCBDMTY4IDEwOCAzNDQgMTA4IDM0NCAxODAgVjI0OCIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSI0MCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBmaWxsPSJub25lIi8+CiAgPGNpcmNsZSBjeD0iMjU2IiBjeT0iMzMwIiByPSIzMiIgZmlsbD0iI2YyNmVmZiIvPgogIDxyZWN0IHg9IjI0MCIgeT0iMzQ2IiB3aWR0aD0iMzIiIGhlaWdodD0iMzYiIHJ4PSI4IiBmaWxsPSIjZjI2ZWZmIi8+Cjwvc3ZnPgo=" width="20" height="20" style="border-radius:6px;"/>
         Dettaglio Coffre
       </div>
       <div id="bar-chart" style="max-height:280px;overflow-y:auto;"></div>
@@ -422,8 +432,6 @@ function renderPie(rows){
   keys.forEach(function(k){var slice=(totals[k]/total)*Math.PI*2;var col=getNoteColor(k);ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,startAngle,startAngle+slice);ctx.closePath();ctx.fillStyle=col;ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();startAngle+=slice;});
   ctx.beginPath();ctx.arc(cx,cy,44,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();
   ctx.fillStyle='#1a1a2e';ctx.font='bold 18px Montserrat,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
-  var img=new Image();img.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImJnIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3R5bGU9InN0b3AtY29sb3I6I2YyNmVmZiIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiNkNDAwZTgiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgogIDxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiByeD0iOTYiIGZpbGw9InVybCgjYmcpIi8+CiAgPHJlY3QgeD0iMTI4IiB5PSIyNDgiIHdpZHRoPSIyNTYiIGhlaWdodD0iMTg0IiByeD0iMjgiIGZpbGw9IndoaXRlIi8+CiAgPHBhdGggZD0iTTE2OCAyNDggVjE4MCBDMTY4IDEwOCAzNDQgMTA4IDM0NCAxODAgVjI0OCIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSI0MCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBmaWxsPSJub25lIi8+CiAgPGNpcmNsZSBjeD0iMjU2IiBjeT0iMzMwIiByPSIzMiIgZmlsbD0iI2YyNmVmZiIvPgogIDxyZWN0IHg9IjI0MCIgeT0iMzQ2IiB3aWR0aD0iMzIiIGhlaWdodD0iMzYiIHJ4PSI4IiBmaWxsPSIjZjI2ZWZmIi8+Cjwvc3ZnPgo=';
-  img.onload=function(){ctx.drawImage(img,cx-12,cy+4,24,24);};
   legend.innerHTML='<table style="width:100%;border-collapse:collapse;margin-top:14px;font-size:13px;"><thead><tr>'+keys.map(function(k){var col=getNoteColor(k);var fg=k==='D1'?'#fff':'#000';return'<th style="background:'+col+';color:'+fg+';padding:6px 10px;font-weight:800;">'+k+'</th>';}).join('')+'</tr></thead><tbody><tr>'+keys.map(function(k){var col=getNoteColor(k);var fg=k==='D1'?'#fff':'#000';return'<td style="text-align:center;padding:8px 10px;font-weight:800;color:'+fg+';background:'+col+';">'+totals[k]+'</td>';}).join('')+'</tr></tbody></table>';
   loadBorseFerme();
 }
