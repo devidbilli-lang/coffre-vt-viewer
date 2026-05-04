@@ -267,7 +267,7 @@ function filterDataDrop(){
   list.classList.add('open');
 }
 function openDataDrop(){filterDataDrop();}
-function blurDataDrop(){setTimeout(function(){document.getElementById('drop-data').classList.remove('open');},150);}
+function blurDataDrop(){setTimeout(function(){document.getElementById('drop-data').classList.remove('open');fixStickyHead();},150);}
 function selectData(d){selectedDate=d;document.getElementById('r-data-txt').value=d;document.getElementById('drop-data').classList.remove('open');filtra();}
 function clearDataFiltro(){selectedDate='';document.getElementById('r-data-txt').value='';filtra();}
 
