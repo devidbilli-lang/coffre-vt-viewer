@@ -323,10 +323,18 @@ function loadR(){
 function fixStickyHead(){
   var filtersEl=document.querySelector('.filters');
   if(!filtersEl)return;
-  var h=filtersEl.getBoundingClientRect().height;
+  var h=filtersEl.offsetHeight;
   var style=document.getElementById('sticky-head-style');
   if(!style){style=document.createElement('style');style.id='sticky-head-style';document.head.appendChild(style);}
-  style.textContent='thead tr{position:sticky;top:'+Math.round(h)+'px;z-index:10;} .right-sticky{position:sticky;top:'+Math.round(h)+'px;}';
+  style.textContent='thead tr{position:sticky;top:'+h+'px;z-index:10;} .right-sticky{position:sticky;top:'+h+'px;}';
+  var rightCol=document.querySelector('.right-sticky');
+  if(rightCol){
+    var totalCard=rightCol.querySelector('[id="total-badge"]');
+    if(totalCard){
+      var parent=totalCard.closest('div[style*="background:linear-gradient"]');
+      if(parent){parent.style.position='sticky';parent.style.top=h+'px';parent.style.zIndex='15';}
+    }
+  }
 }
 window.addEventListener('load',fixStickyHead);
 window.addEventListener('resize',fixStickyHead);
