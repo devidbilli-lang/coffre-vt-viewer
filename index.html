@@ -147,7 +147,7 @@ tbody tr:hover{background:#eeeeff;}
       </table>
     </div>
   </div>
-  <div style="display:flex;flex-direction:column;gap:16px;position:sticky;top:0;">
+  <div class="right-sticky" style="display:flex;flex-direction:column;gap:16px;">
     <div style="background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:16px;padding:16px 20px;box-shadow:0 4px 20px rgba(242,110,255,0.4);display:flex;align-items:center;justify-content:space-between;">
       <div style="display:flex;align-items:center;gap:10px;">
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -166,7 +166,7 @@ tbody tr:hover{background:#eeeeff;}
       <div id="bar-chart" style="max-height:280px;overflow-y:auto;"></div>
     </div>
     <div class="pie-card">
-      <canvas id="pieChart" width="200" height="200"></canvas>
+      <canvas id="pieChart" width="160" height="160"></canvas>
       <div id="pie-legend"></div>
     </div>
     <div class="right-card" style="border-color:#3b82f6;box-shadow:0 0 16px 4px rgba(59,130,246,0.5),0 0 48px 12px rgba(59,130,246,0.2);">
@@ -325,7 +325,7 @@ function fixStickyHead(){
   var h=filtersEl.getBoundingClientRect().height;
   var style=document.getElementById('sticky-head-style');
   if(!style){style=document.createElement('style');style.id='sticky-head-style';document.head.appendChild(style);}
-  style.textContent='thead tr{position:sticky;top:'+Math.round(h)+'px;z-index:10;}';
+  style.textContent='thead tr{position:sticky;top:'+Math.round(h)+'px;z-index:10;} .right-sticky{position:sticky;top:'+Math.round(h)+'px;}';
 }
 window.addEventListener('load',fixStickyHead);
 window.addEventListener('resize',fixStickyHead);
@@ -443,11 +443,11 @@ function renderPie(rows){
   rows.forEach(function(r){ni.forEach(function(i){totals[rHeaders[i]]+=(parseFloat(r[i])||0);});});
   var keys=Object.keys(totals).filter(function(k){return totals[k]>0;});
   var total=keys.reduce(function(s,k){return s+totals[k];},0);
-  var ctx=canvas.getContext('2d');ctx.clearRect(0,0,200,200);
-  if(!total){ctx.fillStyle='#e8e8f0';ctx.beginPath();ctx.arc(100,100,90,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(100,100,44,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();legend.innerHTML='<div style="font-size:12px;color:var(--text-muted);text-align:center">Nessun dato</div>';return;}
-  var startAngle=-Math.PI/2,cx=100,cy=100,r=90;
+  var W=canvas.width,H=canvas.height;var ctx=canvas.getContext('2d');ctx.clearRect(0,0,W,H);
+  var cx2=W/2,cy2=H/2,r2=cx2*0.9;if(!total){ctx.fillStyle='#e8e8f0';ctx.beginPath();ctx.arc(cx2,cy2,r2,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(cx2,cy2,r2*0.49,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();legend.innerHTML='<div style="font-size:12px;color:var(--text-muted);text-align:center">Nessun dato</div>';return;}
+  var startAngle=-Math.PI/2,cx=W/2,cy=H/2,r=cx*0.9;
   keys.forEach(function(k){var slice=(totals[k]/total)*Math.PI*2;var col=getNoteColor(k);ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,startAngle,startAngle+slice);ctx.closePath();ctx.fillStyle=col;ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();startAngle+=slice;});
-  ctx.beginPath();ctx.arc(cx,cy,44,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();
+  ctx.beginPath();ctx.arc(cx,cy,r*0.49,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();
   ctx.fillStyle='#1a1a2e';ctx.font='bold 18px Montserrat,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
   legend.innerHTML='<table style="width:100%;border-collapse:collapse;margin-top:14px;font-size:13px;"><thead><tr>'+keys.map(function(k){var col=getNoteColor(k);var fg=k==='D1'?'#fff':'#000';return'<th style="background:'+col+';color:'+fg+';padding:6px 10px;font-weight:800;">'+k+'</th>';}).join('')+'</tr></thead><tbody><tr>'+keys.map(function(k){var col=getNoteColor(k);var fg=k==='D1'?'#fff':'#000';return'<td style="text-align:center;padding:8px 10px;font-weight:800;color:'+fg+';background:'+col+';">'+totals[k]+'</td>';}).join('')+'</tr></tbody></table>';
   loadBorseFerme();
