@@ -337,7 +337,14 @@ function filtra(){
     return true;
   });
   var gDate=selectedDate||(dateList.length?dateList[0]:'');
-  var fG=allRows.filter(function(r){return formatDate(r[0])===gDate;});
+  var brandEl2=document.getElementById('r-brand');
+  var brandFiltroG=brandEl2?brandEl2.value.toLowerCase():'';
+  var artIdxG=rHeaders.indexOf('Articolo');
+  var fG=allRows.filter(function(r){
+    if(formatDate(r[0])!==gDate)return false;
+    if(brandFiltroG){var codG=String(r[artIdxG>=0?artIdxG:3]||'');var brG=(artBrandMap[codG]||'').toLowerCase();if(brG.indexOf(brandFiltroG)<0)return false;}
+    return true;
+  });
   renderPie(fG);renderBarChart(fG);
   var tb=document.getElementById('tb');
   if(!f.length){tb.innerHTML='<tr><td colspan="'+(rHeaders.filter(function(h){return!isHidden(h);}).length)+'" class="empty">Nessun dato trovato</td></tr>';return;}
