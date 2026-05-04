@@ -284,6 +284,7 @@ function doLogin(){
     if(pwd===d.password){
       document.getElementById('login-screen').style.display='none';
       document.getElementById('app-screen').style.display='block';
+      setTimeout(fixStickyHead, 100);
       loadAll();
     } else {
       err.textContent='Password errata.';err.style.display='block';
