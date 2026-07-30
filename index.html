@@ -201,6 +201,7 @@ function formatDate(v){
 }
 function toISO(d){var p=d.split('/');return p.length===3?p[2]+'-'+p[1]+'-'+p[0]:d;}
 function getNoteColor(cod){return NOTE_COLORS[cod.toUpperCase()]||NOTE_DEFAULT;}
+function fmtNum(n){var v=parseFloat(n)||0;var neg=v<0;v=Math.abs(v);var p=String(v).split('.');p[0]=p[0].replace(/\B(?=(\d{3})+(?!\d))/g,'.');return (neg?'-':'')+p[0]+(p[1]?','+p[1]:'');}
 function getNoteThClass(cod){var u=cod.toUpperCase();if(u==='A1')return'th-note-a1';if(u==='B1')return'th-note-b1';if(u==='C1')return'th-note-c1';if(u==='D1')return'th-note-d1';if(u==='E1')return'th-note-e1';return'';}
 var HIDDEN=['note','codice','notes'];
 function isHidden(col){return HIDDEN.indexOf(col.toLowerCase())>=0;}
@@ -376,10 +377,10 @@ function filtra(){
       if(isHidden(col))continue;
       var td=document.createElement('td');
       if(col==='Data'){td.textContent=dStr;}
-      else if(col==='Totale'){td.className='td-tot';td.innerHTML='<span class="badge">'+(parseFloat(val)||0)+'</span>';}
+      else if(col==='Totale'){td.className='td-tot';td.innerHTML='<span class="badge">'+fmtNum(val)+'</span>';}
       else if(isNoteLibere(col)){td.className='td-note-lib';td.textContent=String(val||'');}
       else if(col==='Articolo'){var coll=artCollMap[String(val)]||'';var desc2=artDescMap[String(val)]||'';td.style.maxWidth='160px';td.innerHTML=String(val)+(desc2?'<br><span style="color:var(--text-muted);font-size:11px;">'+desc2+'</span>':'')+(coll?'<br><span style="color:#e91e8c;font-size:11px;font-weight:700;">'+coll+'</span>':'');}
-      else if(ni.indexOf(i)>=0){var n=parseFloat(val)||0,u=col.toUpperCase();if(n===0){td.className='td-zero';td.textContent='-';}else{var bg=getNoteColor(col);var fg=(u==='D1'||u==='E1')?'#fff':'#000';td.innerHTML='<span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:800;background:'+bg+';color:'+fg+';">'+n+'</span>';}}
+      else if(ni.indexOf(i)>=0){var n=parseFloat(val)||0,u=col.toUpperCase();if(n===0){td.className='td-zero';td.textContent='-';}else{var bg=getNoteColor(col);var fg=(u==='D1'||u==='E1')?'#fff':'#000';td.innerHTML='<span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:800;background:'+bg+';color:'+fg+';">'+fmtNum(n)+'</span>';}}
       else{td.textContent=String(val);}
       tr.appendChild(td);
     }
@@ -395,9 +396,9 @@ function loadBorseFerme(){
     rows.sort(function(a,b){return(parseFloat(b[2])||0)-(parseFloat(a[2])||0);});
     var tot=rows.reduce(function(s,r){return s+(parseFloat(r[2])||0);},0);
     var badge=document.getElementById('borse-total-badge');
-    if(badge){badge.textContent=tot;badge.style.display=tot>0?'inline-flex':'none';}
+    if(badge){badge.textContent=fmtNum(tot);badge.style.display=tot>0?'inline-flex':'none';}
     div.innerHTML=rows.map(function(r){var cod=String(r[0]);var desc=r[1]?String(r[1]):(artDescMap[cod]||'');var qta=parseFloat(r[2])||0;
-      return'<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 4px;border-bottom:1px solid var(--border);"><div style="flex:1;min-width:0;padding-right:6px;"><div style="font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+cod+'</div>'+(desc?'<div style="font-size:10px;color:var(--text-muted);">'+desc+'</div>':'')+'</div><span style="background:#3b82f6;color:#fff;font-size:12px;font-weight:800;padding:2px 8px;border-radius:20px;flex-shrink:0;">'+qta+'</span></div>';
+      return'<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 4px;border-bottom:1px solid var(--border);"><div style="flex:1;min-width:0;padding-right:6px;"><div style="font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+cod+'</div>'+(desc?'<div style="font-size:10px;color:var(--text-muted);">'+desc+'</div>':'')+'</div><span style="background:#3b82f6;color:#fff;font-size:12px;font-weight:800;padding:2px 8px;border-radius:20px;flex-shrink:0;">'+fmtNum(qta)+'</span></div>';
     }).join('');
   });
 }
@@ -410,7 +411,7 @@ function renderBarChart(rows){
   var entries=Object.keys(artTotals).map(function(k){return{cod:k,tot:artTotals[k]};}).sort(function(a,b){return b.tot-a.tot;});
   if(!entries.length){barDiv.innerHTML='<div style="color:var(--text-muted);font-size:12px;text-align:center;">Nessun dato</div>';return;}
   barDiv.innerHTML=entries.map(function(e){var desc=artDescMap[e.cod]||'';var coll=artCollMap[e.cod]||'';
-    return'<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 4px;border-bottom:1px solid var(--border);"><div style="flex:1;min-width:0;padding-right:6px;"><div style="font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+e.cod+'</div>'+(desc?'<div style="font-size:10px;color:var(--text-muted);">'+desc+'</div>':'')+(coll?'<div style="font-size:10px;color:#e91e8c;font-weight:700;">'+coll+'</div>':'')+'</div><span style="background:#f26eff;color:#fff;font-size:12px;font-weight:800;padding:2px 8px;border-radius:20px;flex-shrink:0;">'+e.tot+'</span></div>';
+    return'<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 4px;border-bottom:1px solid var(--border);"><div style="flex:1;min-width:0;padding-right:6px;"><div style="font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+e.cod+'</div>'+(desc?'<div style="font-size:10px;color:var(--text-muted);">'+desc+'</div>':'')+(coll?'<div style="font-size:10px;color:#e91e8c;font-weight:700;">'+coll+'</div>':'')+'</div><span style="background:#f26eff;color:#fff;font-size:12px;font-weight:800;padding:2px 8px;border-radius:20px;flex-shrink:0;">'+fmtNum(e.tot)+'</span></div>';
   }).join('');
 }
 
@@ -430,7 +431,7 @@ function updateTotalBadge(filteredRows){
   }
   rows.forEach(function(r){ni.forEach(function(i){total+=(parseFloat(r[i])||0);});});
   var badge=document.getElementById('total-badge');
-  if(badge)badge.textContent=total>0?total:'—';
+  if(badge)badge.textContent=total>0?fmtNum(total):'—';
 }
 
 function renderPie(rows){
@@ -446,7 +447,7 @@ function renderPie(rows){
   keys.forEach(function(k){var slice=(totals[k]/total)*Math.PI*2;var col=getNoteColor(k);ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,startAngle,startAngle+slice);ctx.closePath();ctx.fillStyle=col;ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();startAngle+=slice;});
   ctx.beginPath();ctx.arc(cx,cy,r*0.49,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();
   ctx.fillStyle='#1a1a2e';ctx.font='bold 18px Montserrat,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
-  legend.innerHTML='<table style="width:100%;border-collapse:collapse;margin-top:14px;font-size:13px;"><thead><tr>'+keys.map(function(k){var col=getNoteColor(k);var fg=(k==='D1'||k==='E1')?'#fff':'#000';return'<th style="background:'+col+';color:'+fg+';padding:6px 10px;font-weight:800;">'+k+'</th>';}).join('')+'</tr></thead><tbody><tr>'+keys.map(function(k){var col=getNoteColor(k);var fg=(k==='D1'||k==='E1')?'#fff':'#000';return'<td style="text-align:center;padding:8px 10px;font-weight:800;color:'+fg+';background:'+col+';">'+totals[k]+'</td>';}).join('')+'</tr></tbody></table>';
+  legend.innerHTML='<table style="width:100%;border-collapse:collapse;margin-top:14px;font-size:13px;"><thead><tr>'+keys.map(function(k){var col=getNoteColor(k);var fg=(k==='D1'||k==='E1')?'#fff':'#000';return'<th style="background:'+col+';color:'+fg+';padding:6px 10px;font-weight:800;">'+k+'</th>';}).join('')+'</tr></thead><tbody><tr>'+keys.map(function(k){var col=getNoteColor(k);var fg=(k==='D1'||k==='E1')?'#fff':'#000';return'<td style="text-align:center;padding:8px 10px;font-weight:800;color:'+fg+';background:'+col+';">'+fmtNum(totals[k])+'</td>';}).join('')+'</tr></tbody></table>';
   loadBorseFerme();
 }
 
