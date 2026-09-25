@@ -397,8 +397,8 @@ function loadBorseFerme(){
     var tot=rows.reduce(function(s,r){return s+(parseFloat(r[2])||0);},0);
     var badge=document.getElementById('borse-total-badge');
     if(badge){badge.textContent=fmtNum(tot);badge.style.display=tot>0?'inline-flex':'none';}
-    div.innerHTML=rows.map(function(r){var cod=String(r[0]);var desc=r[1]?String(r[1]):(artDescMap[cod]||'');var qta=parseFloat(r[2])||0;
-      return'<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 4px;border-bottom:1px solid var(--border);"><div style="flex:1;min-width:0;padding-right:6px;"><div style="font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+cod+'</div>'+(desc?'<div style="font-size:10px;color:var(--text-muted);">'+desc+'</div>':'')+'</div><span style="background:#3b82f6;color:#fff;font-size:12px;font-weight:800;padding:2px 8px;border-radius:20px;flex-shrink:0;">'+fmtNum(qta)+'</span></div>';
+    div.innerHTML=rows.map(function(r){var cod=String(r[0]);var desc=r[1]?String(r[1]):(artDescMap[cod]||'');var qta=parseFloat(r[2])||0;var tipo=r[3]?String(r[3]).trim():'';
+      return'<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 4px;border-bottom:1px solid var(--border);"><div style="flex:1;min-width:0;padding-right:6px;"><div style="font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+cod+(tipo?' <span style="color:#dc2626;font-weight:800;font-size:10px;letter-spacing:0.3px;">'+tipo+'</span>':'')+'</div>'+(desc?'<div style="font-size:10px;color:var(--text-muted);">'+desc+'</div>':'')+'</div><span style="background:#3b82f6;color:#fff;font-size:12px;font-weight:800;padding:2px 8px;border-radius:20px;flex-shrink:0;">'+fmtNum(qta)+'</span></div>';
     }).join('');
   });
 }
